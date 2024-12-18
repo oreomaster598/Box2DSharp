@@ -176,7 +176,7 @@ namespace Box2DSharp.Dynamics
         /// <summary>
         /// 重力系数
         /// </summary>
-        internal float GravityScale;
+        public float GravityScale;
 
         /// <summary>
         /// 质心的转动惯量倒数
@@ -298,12 +298,13 @@ namespace Box2DSharp.Dynamics
             set => _angularDamping = value;
         }
 
-        /// <summary>
-        /// Get/Set the angular velocity.
-        /// the new angular velocity in radians/second.
-        /// 角速度
-        /// </summary>
-        public float AngularVelocity { get; internal set; }
+
+		/// <summary>
+		/// Get/Set the angular velocity.
+		/// the new angular velocity in radians/second.
+		/// 角速度
+		/// </summary>
+		public float AngularVelocity { get; internal set; }
 
         /// Get the rotational inertia of the body about the local origin.
         /// @return the rotational inertia, usually in kg-m^2.

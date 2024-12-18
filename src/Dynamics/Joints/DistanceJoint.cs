@@ -401,7 +401,8 @@ namespace Box2DSharp.Dynamics.Joints
         /// <inheritdoc />
         public override void Draw(IDrawer drawer)
         {
-            var xfA = BodyA.GetTransform();
+			DebugDrawContext ctx = new DebugDrawContext(DrawFlag.DrawShape);
+			var xfA = BodyA.GetTransform();
             var xfB = BodyB.GetTransform();
             var pA = MathUtils.Mul(xfA, _localAnchorA);
             var pB = MathUtils.Mul(xfB, _localAnchorB);
@@ -414,23 +415,23 @@ namespace Box2DSharp.Dynamics.Joints
             var c3 = Color.FromArgb(0.9f, 0.3f, 0.3f);
             var c4 = Color.FromArgb(0.4f, 0.4f, 0.4f);
 
-            drawer.DrawSegment(pA, pB, c4);
+            drawer.DrawSegment(pA, pB, c4, ctx);
 
             var pRest = pA + _length * axis;
-            drawer.DrawPoint(pRest, 8.0f, c1);
+            drawer.DrawPoint(pRest, 8.0f, c1, ctx);
 
             if (Math.Abs(_minLength - _maxLength) > Settings.Epsilon)
             {
                 if (_minLength > Settings.LinearSlop)
                 {
                     var pMin = pA + _minLength * axis;
-                    drawer.DrawPoint(pMin, 4.0f, c2);
+                    drawer.DrawPoint(pMin, 4.0f, c2, ctx);
                 }
 
                 if (_maxLength < Settings.MaxFloat)
                 {
                     var pMax = pA + _maxLength * axis;
-                    drawer.DrawPoint(pMax, 4.0f, c3);
+                    drawer.DrawPoint(pMax, 4.0f, c3, ctx);
                 }
             }
         }

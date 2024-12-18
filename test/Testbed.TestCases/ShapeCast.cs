@@ -52,6 +52,7 @@ namespace Testbed.TestCases
 
         protected override void OnRender()
         {
+            DebugDrawContext ctx = new DebugDrawContext(DrawFlag.DrawShape);
             var input = new ShapeCastInput();
             input.ProxyA.Set(_vAs, _countA, _radiusA);
             input.ProxyB.Set(_vBs, _countB, _radiusB);
@@ -89,11 +90,11 @@ namespace Testbed.TestCases
 
             if (_countA == 1)
             {
-                Drawer.DrawCircle(vertices[0], _radiusA, Color.FromArgb(0.9f, 0.9f, 0.9f));
+                Drawer.DrawCircle(vertices[0], _radiusA, Color.FromArgb(0.9f, 0.9f, 0.9f),ctx);
             }
             else
             {
-                Drawer.DrawPolygon(vertices, _countA, Color.FromArgb(0.9f, 0.9f, 0.9f));
+                Drawer.DrawPolygon(vertices, _countA, Color.FromArgb(0.9f, 0.9f, 0.9f),ctx);
             }
 
             for (var i = 0; i < _countB; ++i)
@@ -103,11 +104,11 @@ namespace Testbed.TestCases
 
             if (_countB == 1)
             {
-                Drawer.DrawCircle(vertices[0], _radiusB, Color.FromArgb(0.5f, 0.9f, 0.5f));
+                Drawer.DrawCircle(vertices[0], _radiusB, Color.FromArgb(0.5f, 0.9f, 0.5f), ctx);
             }
             else
             {
-                Drawer.DrawPolygon(vertices, _countB, Color.FromArgb(0.5f, 0.9f, 0.5f));
+                Drawer.DrawPolygon(vertices, _countB, Color.FromArgb(0.5f, 0.9f, 0.5f), ctx);
             }
 
             for (var i = 0; i < _countB; ++i)
@@ -117,19 +118,19 @@ namespace Testbed.TestCases
 
             if (_countB == 1)
             {
-                Drawer.DrawCircle(vertices[0], _radiusB, Color.FromArgb(0.5f, 0.7f, 0.9f));
+                Drawer.DrawCircle(vertices[0], _radiusB, Color.FromArgb(0.5f, 0.7f, 0.9f), ctx);
             }
             else
             {
-                Drawer.DrawPolygon(vertices, _countB, Color.FromArgb(0.5f, 0.7f, 0.9f));
+                Drawer.DrawPolygon(vertices, _countB, Color.FromArgb(0.5f, 0.7f, 0.9f), ctx);
             }
 
             if (hit)
             {
                 var p1 = output.Point;
-                Drawer.DrawPoint(p1, 10.0f, Color.FromArgb(230, 77, 77));
+                Drawer.DrawPoint(p1, 10.0f, Color.FromArgb(230, 77, 77), ctx);
                 var p2 = p1 + output.Normal;
-                Drawer.DrawSegment(p1, p2, Color.FromArgb(230, 77, 77));
+                Drawer.DrawSegment(p1, p2, Color.FromArgb(230, 77, 77), ctx);
             }
         }
     }

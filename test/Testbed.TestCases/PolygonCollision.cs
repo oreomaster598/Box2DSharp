@@ -76,8 +76,9 @@ namespace Testbed.TestCases
         }
 
         protected override void OnRender()
-        {
-            var manifold = new Manifold();
+		{
+			DebugDrawContext ctx = new DebugDrawContext(DrawFlag.DrawShape);
+			var manifold = new Manifold();
             CollisionUtils.CollidePolygons(ref manifold, _polygonA, _transformA, _polygonB, _transformB);
             var worldManifold = new WorldManifold();
             worldManifold.Initialize(manifold, _transformA, _polygonA.Radius, _transformB, _polygonB.Radius);
@@ -91,19 +92,19 @@ namespace Testbed.TestCases
                     v[i] = MathUtils.Mul(_transformA, _polygonA.Vertices[i]);
                 }
 
-                Drawer.DrawPolygon(v, _polygonA.Count, color);
+                Drawer.DrawPolygon(v, _polygonA.Count, color,ctx);
 
                 for (var i = 0; i < _polygonB.Count; ++i)
                 {
                     v[i] = MathUtils.Mul(_transformB, _polygonB.Vertices[i]);
                 }
 
-                Drawer.DrawPolygon(v, _polygonB.Count, color);
+                Drawer.DrawPolygon(v, _polygonB.Count, color, ctx);
             }
 
             for (var i = 0; i < manifold.PointCount; ++i)
             {
-                Drawer.DrawPoint(worldManifold.Points[i], 4.0f, Color.FromArgb(230, 77, 77));
+                Drawer.DrawPoint(worldManifold.Points[i], 4.0f, Color.FromArgb(230, 77, 77), ctx);
             }
         }
     }

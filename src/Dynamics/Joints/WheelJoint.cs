@@ -688,8 +688,9 @@ namespace Box2DSharp.Dynamics.Joints
 
         /// <inheritdoc />
         public override void Draw(IDrawer drawer)
-        {
-            var xfA = BodyA.GetTransform();
+		{
+			DebugDrawContext ctx = new DebugDrawContext(DrawFlag.DrawShape);
+			var xfA = BodyA.GetTransform();
             var xfB = BodyB.GetTransform();
             var pA = MathUtils.Mul(xfA, _localAnchorA);
             var pB = MathUtils.Mul(xfB, _localAnchorB);
@@ -702,24 +703,24 @@ namespace Box2DSharp.Dynamics.Joints
             var c4 = Color.FromArgb(0.3f, 0.3f, 0.9f);
             var c5 = Color.FromArgb(0.4f, 0.4f, 0.4f);
 
-            drawer.DrawSegment(pA, pB, c5);
+            drawer.DrawSegment(pA, pB, c5, ctx);
 
             if (_enableLimit)
             {
                 var lower = pA + _lowerTranslation * axis;
                 var upper = pA + _upperTranslation * axis;
                 var perp = MathUtils.Mul(xfA.Rotation, _localYAxisA);
-                drawer.DrawSegment(lower, upper, c1);
-                drawer.DrawSegment(lower - 0.5f * perp, lower + 0.5f * perp, c2);
-                drawer.DrawSegment(upper - 0.5f * perp, upper + 0.5f * perp, c3);
+                drawer.DrawSegment(lower, upper, c1, ctx);
+                drawer.DrawSegment(lower - 0.5f * perp, lower + 0.5f * perp, c2, ctx);
+                drawer.DrawSegment(upper - 0.5f * perp, upper + 0.5f * perp, c3, ctx);
             }
             else
             {
-                drawer.DrawSegment(pA - 1.0f * axis, pA + 1.0f * axis, c1);
+                drawer.DrawSegment(pA - 1.0f * axis, pA + 1.0f * axis, c1, ctx);
             }
 
-            drawer.DrawPoint(pA, 5.0f, c1);
-            drawer.DrawPoint(pB, 5.0f, c4);
+            drawer.DrawPoint(pA, 5.0f, c1, ctx);
+            drawer.DrawPoint(pB, 5.0f, c4, ctx);
         }
     }
 }

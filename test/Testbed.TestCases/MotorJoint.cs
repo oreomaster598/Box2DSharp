@@ -91,10 +91,11 @@ namespace Testbed.TestCases
         private Vector2 _linearOffset;
 
         protected override void OnRender()
-        {
-            DrawString("Keys: (s) pause");
+		{
+			DebugDrawContext ctx = new DebugDrawContext(DrawFlag.DrawShape);
+			DrawString("Keys: (s) pause");
 
-            Drawer.DrawPoint(_linearOffset, 4.0f, Color.FromArgb(230, 230, 230));
+            Drawer.DrawPoint(_linearOffset, 4.0f, Color.FromArgb(230, 230, 230),ctx);
         }
     }
 }

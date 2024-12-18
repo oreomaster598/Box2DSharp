@@ -31,8 +31,9 @@ namespace Testbed.TestCases
         /// Called for each fixture found in the query AABB.
         /// @return false to terminate the query.
         public bool QueryCallback(Fixture fixture)
-        {
-            if (Count == MaxCount)
+		{
+			DebugDrawContext ctx = new DebugDrawContext(DrawFlag.DrawShape);
+			if (Count == MaxCount)
             {
                 return false;
             }
@@ -53,7 +54,7 @@ namespace Testbed.TestCases
             {
                 var color = Box2DSharp.Common.Color.FromArgb(0.95f, 0.95f, 0.6f);
                 var center = body.GetWorldCenter();
-                _drawer.DrawPoint(center, 5.0f, color);
+                _drawer.DrawPoint(center, 5.0f, color,ctx);
                 ++Count;
             }
 
@@ -247,8 +248,9 @@ namespace Testbed.TestCases
 
         /// <inheritdoc />
         protected override void OnRender()
-        {
-            DrawString("Press 1-5 to drop stuff");
+		{
+			DebugDrawContext ctx = new DebugDrawContext(DrawFlag.DrawShape);
+			DrawString("Press 1-5 to drop stuff");
             DrawString("Press 'a' to (de)activate some bodies");
             DrawString("Press 'd' to destroy a body");
 
@@ -260,7 +262,7 @@ namespace Testbed.TestCases
             World.QueryAABB(callback, aabb);
 
             var color = Color.FromArgb(102, 178, 204);
-            Drawer.DrawCircle(callback.Circle.Position, callback.Circle.Radius, color);
+            Drawer.DrawCircle(callback.Circle.Position, callback.Circle.Radius, color,ctx);
         }
     }
 }

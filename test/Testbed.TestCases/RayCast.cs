@@ -217,8 +217,9 @@ namespace Testbed.TestCases
 
         /// <inheritdoc />
         protected override void OnRender()
-        {
-            DrawString("Shape 1 is intentionally ignored by the ray");
+		{
+			DebugDrawContext ctx = new DebugDrawContext(DrawFlag.DrawShape);
+			DrawString("Shape 1 is intentionally ignored by the ray");
             switch (_mode)
             {
             case Mode.Closest:
@@ -250,14 +251,14 @@ namespace Testbed.TestCases
 
                 if (callback.Hit)
                 {
-                    Drawer.DrawPoint(callback.Point, 5.0f, Color.FromArgb(102, 230, 102));
-                    Drawer.DrawSegment(point1, callback.Point, Color.FromArgb(204, 204, 204));
+                    Drawer.DrawPoint(callback.Point, 5.0f, Color.FromArgb(102, 230, 102),ctx);
+                    Drawer.DrawSegment(point1, callback.Point, Color.FromArgb(204, 204, 204), ctx);
                     var head = callback.Point + 0.5f * callback.Normal;
-                    Drawer.DrawSegment(callback.Point, head, Color.FromArgb(230, 230, 102));
+                    Drawer.DrawSegment(callback.Point, head, Color.FromArgb(230, 230, 102), ctx);
                 }
                 else
                 {
-                    Drawer.DrawSegment(point1, point2, Color.FromArgb(102, 204, 204));
+                    Drawer.DrawSegment(point1, point2, Color.FromArgb(102, 204, 204), ctx);
                 }
 
                 break;
@@ -270,14 +271,14 @@ namespace Testbed.TestCases
 
                 if (callback.Hit)
                 {
-                    Drawer.DrawPoint(callback.Point, 5.0f, Color.FromArgb(102, 230, 102));
-                    Drawer.DrawSegment(point1, callback.Point, Color.FromArgb(204, 204, 204));
+                    Drawer.DrawPoint(callback.Point, 5.0f, Color.FromArgb(102, 230, 102), ctx);
+                    Drawer.DrawSegment(point1, callback.Point, Color.FromArgb(204, 204, 204), ctx);
                     var head = callback.Point + 0.5f * callback.Normal;
-                    Drawer.DrawSegment(callback.Point, head, Color.FromArgb(230, 230, 102));
+                    Drawer.DrawSegment(callback.Point, head, Color.FromArgb(230, 230, 102), ctx);
                 }
                 else
                 {
-                    Drawer.DrawSegment(point1, point2, Color.FromArgb(204, 204, 204));
+                    Drawer.DrawSegment(point1, point2, Color.FromArgb(204, 204, 204), ctx);
                 }
 
                 break;
@@ -287,16 +288,16 @@ namespace Testbed.TestCases
             {
                 var callback = new RayCastMultipleCallback();
                 World.RayCast(callback, point1, point2);
-                Drawer.DrawSegment(point1, point2, Color.FromArgb(204, 204, 204));
+                Drawer.DrawSegment(point1, point2, Color.FromArgb(204, 204, 204), ctx);
 
                 for (var i = 0; i < callback.Count; ++i)
                 {
                     var p = callback.Points[i];
                     var n = callback.Normals[i];
-                    Drawer.DrawPoint(p, 5.0f, Color.FromArgb(102, 230, 102));
-                    Drawer.DrawSegment(point1, p, Color.FromArgb(204, 204, 204));
+                    Drawer.DrawPoint(p, 5.0f, Color.FromArgb(102, 230, 102), ctx);
+                    Drawer.DrawSegment(point1, p, Color.FromArgb(204, 204, 204), ctx);
                     var head = p + 0.5f * n;
-                    Drawer.DrawSegment(p, head, Color.FromArgb(230, 230, 102));
+                    Drawer.DrawSegment(p, head, Color.FromArgb(230, 230, 102), ctx);
                 }
 
                 break;

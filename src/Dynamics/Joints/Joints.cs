@@ -183,8 +183,9 @@ namespace Box2DSharp.Dynamics.Joints
         /// </summary>
         /// <param name="drawer"></param>
         public virtual void Draw(IDrawer drawer)
-        {
-            var xf1 = BodyA.GetTransform();
+		{
+			DebugDrawContext ctx = new DebugDrawContext(DrawFlag.DrawShape);
+			var xf1 = BodyA.GetTransform();
             var xf2 = BodyB.GetTransform();
             var x1 = xf1.Position;
             var x2 = xf2.Position;
@@ -196,7 +197,7 @@ namespace Box2DSharp.Dynamics.Joints
             switch (JointType)
             {
             case JointType.DistanceJoint:
-                drawer.DrawSegment(p1, p2, color);
+                drawer.DrawSegment(p1, p2, color,ctx);
                 break;
 
             case JointType.PulleyJoint:
@@ -204,26 +205,26 @@ namespace Box2DSharp.Dynamics.Joints
                 var pulley = (PulleyJoint)this;
                 var s1 = pulley.GetGroundAnchorA();
                 var s2 = pulley.GetGroundAnchorB();
-                drawer.DrawSegment(s1, p1, color);
-                drawer.DrawSegment(s2, p2, color);
-                drawer.DrawSegment(s1, s2, color);
+                drawer.DrawSegment(s1, p1, color, ctx);
+                drawer.DrawSegment(s2, p2, color, ctx);
+                drawer.DrawSegment(s1, s2, color, ctx);
             }
                 break;
 
             case JointType.MouseJoint:
             {
                 var c = Color.FromArgb(0.0f, 1.0f, 0.0f);
-                drawer.DrawPoint(p1, 4.0f, c);
-                drawer.DrawPoint(p2, 4.0f, c);
+                drawer.DrawPoint(p1, 4.0f, c, ctx);
+                drawer.DrawPoint(p2, 4.0f, c, ctx);
 
-                drawer.DrawSegment(p1, p2, Color.FromArgb(0.8f, 0.8f, 0.8f));
+                drawer.DrawSegment(p1, p2, Color.FromArgb(0.8f, 0.8f, 0.8f), ctx);
             }
                 break;
 
             default:
-                drawer.DrawSegment(x1, p1, color);
-                drawer.DrawSegment(p1, p2, color);
-                drawer.DrawSegment(x2, p2, color);
+                drawer.DrawSegment(x1, p1, color, ctx);
+                drawer.DrawSegment(p1, p2, color, ctx);
+                drawer.DrawSegment(x2, p2, color, ctx);
                 break;
             }
         }

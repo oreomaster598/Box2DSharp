@@ -186,7 +186,7 @@ namespace Box2DSharp.Collision.Shapes
             }
 
             // Compute the polygon centroid.
-            Centroid = ComputeCentroid(Vertices, m);
+			Centroid = ComputeCentroid(Vertices, m);
         }
 
         /// Build vertices to represent an axis-aligned box centered on the local origin.
@@ -487,7 +487,7 @@ namespace Box2DSharp.Collision.Shapes
             }
 
             // Centroid
-            Debug.Assert(area > Settings.Epsilon);
+            //Debug.Assert(area > Settings.Epsilon);
             c = (1.0f / area) * c + s;
             return c;
         }

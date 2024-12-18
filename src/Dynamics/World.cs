@@ -1404,49 +1404,56 @@ namespace Box2DSharp.Dynamics
                 return;
             }
 
-            var inactiveColor = Color.FromArgb(128, 128, 77);
+            Color[] colors = Drawer.GetColors();
+
+            /*var inactiveColor = Color.FromArgb(128, 128, 77);
             var staticBodyColor = Color.FromArgb(127, 230, 127);
             var kinematicBodyColor = Color.FromArgb(127, 127, 230);
             var sleepColor = Color.FromArgb(153, 153, 153);
-            var lastColor = Color.FromArgb(230, 179, 179);
+            var lastColor = Color.FromArgb(230, 179, 179);*/
             var flags = Drawer.Flags;
 
             if (flags.IsSet(DrawFlag.DrawShape))
             {
+                int bodyId = 0;
                 for (var node = BodyList.First; node != null; node = node.Next)
                 {
                     var b = node.Value;
                     var xf = b.GetTransform();
                     var isEnabled = b.IsEnabled;
                     var isAwake = b.IsAwake;
-                    foreach (var f in b.Fixtures)
+
+                    //foreach (var f in b.Fixtures)
+                    for (int idx = 0; idx < b.FixtureList.Count; idx++)
                     {
                         if (b.BodyType == BodyType.DynamicBody && b.Mass.Equals(0))
                         {
                             // Bad body
-                            DrawShape(f, xf, Color.FromArgb(1.0f, 0.0f, 0.0f));
+                            DrawShape(b, idx, bodyId, xf, Color.FromArgb(1.0f, 0.0f, 0.0f));
                         }
                         else if (isEnabled == false)
                         {
-                            DrawShape(f, xf, inactiveColor);
+                            DrawShape(b, idx, bodyId, xf, colors[(int)DebugDrawColor.inactiveColor]);
                         }
                         else if (b.BodyType == BodyType.StaticBody)
                         {
-                            DrawShape(f, xf, staticBodyColor);
+                            DrawShape(b, idx, bodyId, xf, colors[(int)DebugDrawColor.sleepColor]);
                         }
                         else if (b.BodyType == BodyType.KinematicBody)
                         {
-                            DrawShape(f, xf, kinematicBodyColor);
+                            DrawShape(b, idx, bodyId, xf, colors[(int)DebugDrawColor.kinematicBodyColor]);
                         }
                         else if (isAwake == false)
                         {
-                            DrawShape(f, xf, sleepColor);
+                            DrawShape(b, idx, bodyId, xf, colors[(int)DebugDrawColor.sleepColor]);
                         }
                         else
                         {
-                            DrawShape(f, xf, lastColor);
+                            DrawShape(b, idx, bodyId, xf, colors[(int)DebugDrawColor.lastColor]);
                         }
-                    }
+                        bodyId++;
+
+					}
                 }
             }
 
@@ -1472,7 +1479,7 @@ namespace Box2DSharp.Dynamics
                     var cA = fixtureA.GetAABB(c.ChildIndexA).GetCenter();
                     var cB = fixtureB.GetAABB(c.ChildIndexB).GetCenter();
 
-                    Drawer.DrawSegment(cA, cB, color);
+                    Drawer.DrawSegment(cA, cB, color, new DebugDrawContext(DrawFlag.DrawPair));
                 }
             }
 
@@ -1501,7 +1508,7 @@ namespace Box2DSharp.Dynamics
                             vs[1] = new Vector2(aabb.UpperBound.X, aabb.LowerBound.Y);
                             vs[2] = new Vector2(aabb.UpperBound.X, aabb.UpperBound.Y);
                             vs[3] = new Vector2(aabb.LowerBound.X, aabb.UpperBound.Y);
-                            Drawer.DrawPolygon(vs, 4, color);
+                            Drawer.DrawPolygon(vs, 4, color, new DebugDrawContext(DrawFlag.DrawAABB));
                         }
                     }
                 }
@@ -1516,8 +1523,8 @@ namespace Box2DSharp.Dynamics
                     node = node.Next;
                     var xf = b.GetTransform();
                     xf.Position = b.GetWorldCenter();
-                    Drawer.DrawTransform(xf);
-                }
+                    Drawer.DrawTransform(xf, new DebugDrawContext(DrawFlag.DrawCenterOfMass, b));
+				}
             }
         }
 
@@ -1527,9 +1534,11 @@ namespace Box2DSharp.Dynamics
         /// <param name="fixture"></param>
         /// <param name="xf"></param>
         /// <param name="color"></param>
-        private void DrawShape(Fixture fixture, in Transform xf, in Color color)
+        private void DrawShape(Body body, int fixtureId, int bodyId, in Transform xf, in Color color)
         {
-            switch (fixture.Shape)
+            DebugDrawContext ctx = new DebugDrawContext(DrawFlag.DrawShape, body, fixtureId, bodyId);
+            Fixture fixture = body.FixtureList[fixtureId];
+			switch (fixture.Shape)
             {
             case CircleShape circle:
             {
@@ -1537,7 +1546,7 @@ namespace Box2DSharp.Dynamics
                 var radius = circle.Radius;
                 var axis = MathUtils.Mul(xf.Rotation, new Vector2(1.0f, 0.0f));
 
-                Drawer.DrawSolidCircle(center, radius, axis, color);
+                Drawer.DrawSolidCircle(center, radius, axis, color, ctx);
             }
                 break;
 
@@ -1545,12 +1554,12 @@ namespace Box2DSharp.Dynamics
             {
                 var v1 = MathUtils.Mul(xf, edge.Vertex1);
                 var v2 = MathUtils.Mul(xf, edge.Vertex2);
-                Drawer.DrawSegment(v1, v2, color);
+                Drawer.DrawSegment(v1, v2, color, ctx);
 
                 if (edge.OneSided == false)
                 {
-                    Drawer.DrawPoint(v1, 4.0f, color);
-                    Drawer.DrawPoint(v2, 4.0f, color);
+                    Drawer.DrawPoint(v1, 4.0f, color, ctx);
+                    Drawer.DrawPoint(v2, 4.0f, color, ctx);
                 }
             }
                 break;
@@ -1564,7 +1573,7 @@ namespace Box2DSharp.Dynamics
                 for (var i = 1; i < count; ++i)
                 {
                     var v2 = MathUtils.Mul(xf, vertices[i]);
-                    Drawer.DrawSegment(v1, v2, color);
+                    Drawer.DrawSegment(v1, v2, color, ctx);
                     v1 = v2;
                 }
             }
@@ -1581,7 +1590,7 @@ namespace Box2DSharp.Dynamics
                     vertices[i] = MathUtils.Mul(xf, poly.Vertices[i]);
                 }
 
-                Drawer.DrawSolidPolygon(vertices, vertexCount, color);
+                Drawer.DrawSolidPolygon(vertices, vertexCount, color, ctx);
             }
                 break;
             }

@@ -743,6 +743,8 @@ namespace Box2DSharp.Ropes
 
         public void Draw(IDrawer draw)
         {
+            DebugDrawContext ctx = new DebugDrawContext(DrawFlag.DrawShape);
+
             var c = Color.FromArgb(0.4f, 0.5f, 0.7f);
 
             var pg = Color.FromArgb(0.1f, 0.8f, 0.1f);
@@ -750,15 +752,15 @@ namespace Box2DSharp.Ropes
             var pd = Color.FromArgb(0.7f, 0.2f, 0.4f);
             for (var i = 0; i < _count - 1; ++i)
             {
-                draw.DrawSegment(_ps[i], _ps[i + 1], c);
+                draw.DrawSegment(_ps[i], _ps[i + 1], c, ctx);
 
                 var pc = _invMasses[i] > 0.0f ? pd : pg;
-                draw.DrawPoint(_ps[i], 5.0f, pc);
+                draw.DrawPoint(_ps[i], 5.0f, pc, ctx);
             }
 
             {
                 var pc = _invMasses[_count - 1] > 0.0f ? pd : pg;
-                draw.DrawPoint(_ps[_count - 1], 5.0f, pc);
+                draw.DrawPoint(_ps[_count - 1], 5.0f, pc, ctx);
             }
         }
     }

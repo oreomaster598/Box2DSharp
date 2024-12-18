@@ -534,8 +534,9 @@ namespace Box2DSharp.Dynamics.Joints
 
         /// <inheritdoc />
         public override void Draw(IDrawer drawer)
-        {
-            var xfA = BodyA.GetTransform();
+		{
+			DebugDrawContext ctx = new DebugDrawContext(DrawFlag.DrawShape);
+			var xfA = BodyA.GetTransform();
             var xfB = BodyB.GetTransform();
             var pA = MathUtils.Mul(xfA, LocalAnchorA);
             var pB = MathUtils.Mul(xfB, LocalAnchorB);
@@ -546,8 +547,8 @@ namespace Box2DSharp.Dynamics.Joints
             var c4 = Color.FromArgb(0.3f, 0.3f, 0.9f);
             var c5 = Color.FromArgb(0.4f, 0.4f, 0.4f);
 
-            drawer.DrawPoint(pA, 5.0f, c4);
-            drawer.DrawPoint(pB, 5.0f, c5);
+            drawer.DrawPoint(pA, 5.0f, c4, ctx);
+            drawer.DrawPoint(pB, 5.0f, c5, ctx);
 
             var aA = BodyA.GetAngle();
             var aB = BodyB.GetAngle();
@@ -556,22 +557,22 @@ namespace Box2DSharp.Dynamics.Joints
             var L = 0.5f;
 
             var r = L * new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle));
-            drawer.DrawSegment(pB, pB + r, c1);
-            drawer.DrawCircle(pB, L, c1);
+            drawer.DrawSegment(pB, pB + r, c1, ctx);
+            drawer.DrawCircle(pB, L, c1, ctx);
 
             if (_enableLimit)
             {
                 var rlo = L * new Vector2((float)Math.Cos(_lowerAngle), (float)Math.Cos(_lowerAngle));
                 var rhi = L * new Vector2((float)Math.Cos(_upperAngle), (float)Math.Cos(_upperAngle));
 
-                drawer.DrawSegment(pB, pB + rlo, c2);
-                drawer.DrawSegment(pB, pB + rhi, c3);
+                drawer.DrawSegment(pB, pB + rlo, c2, ctx);
+                drawer.DrawSegment(pB, pB + rhi, c3, ctx);
             }
 
             var color = Color.FromArgb(0.5f, 0.8f, 0.8f);
-            drawer.DrawSegment(xfA.Position, pA, color);
-            drawer.DrawSegment(pA, pB, color);
-            drawer.DrawSegment(xfB.Position, pB, color);
+            drawer.DrawSegment(xfA.Position, pA, color, ctx);
+            drawer.DrawSegment(pA, pB, color, ctx);
+            drawer.DrawSegment(xfB.Position, pB, color, ctx);
         }
     }
 }

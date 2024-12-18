@@ -235,8 +235,9 @@ namespace Testbed.Abstractions
         }
 
         private void DrawWorld()
-        {
-            DrawFlag flags = 0;
+		{
+			DebugDrawContext ctx = new DebugDrawContext(DrawFlag.DrawShape);
+			DrawFlag flags = 0;
             if (TestSettings.DrawShapes)
             {
                 flags |= DrawFlag.DrawShape;
@@ -274,25 +275,25 @@ namespace Testbed.Abstractions
                     if (point.State == PointState.AddState)
                     {
                         // Add
-                        Drawer.DrawPoint(point.Position, 10f, Color.FromArgb(77, 242, 77));
+                        Drawer.DrawPoint(point.Position, 10f, Color.FromArgb(77, 242, 77), ctx);
                     }
                     else if (point.State == PointState.PersistState)
                     {
                         // Persist
-                        Drawer.DrawPoint(point.Position, 5f, Color.FromArgb(77, 77, 242));
+                        Drawer.DrawPoint(point.Position, 5f, Color.FromArgb(77, 77, 242), ctx);
                     }
 
                     if (TestSettings.DrawContactNormals)
                     {
                         var p1 = point.Position;
                         var p2 = p1 + AxisScale * point.Normal;
-                        Drawer.DrawSegment(p1, p2, Color.FromArgb(230, 230, 230));
+                        Drawer.DrawSegment(p1, p2, Color.FromArgb(230, 230, 230), ctx);
                     }
                     else if (TestSettings.DrawContactImpulse)
                     {
                         var p1 = point.Position;
                         var p2 = p1 + ImpulseScale * point.NormalImpulse * point.Normal;
-                        Global.DebugDrawer.DrawSegment(p1, p2, Color.FromArgb(230, 230, 77));
+                        Global.DebugDrawer.DrawSegment(p1, p2, Color.FromArgb(230, 230, 77), ctx);
                     }
 
                     if (TestSettings.DrawFrictionImpulse)
@@ -300,15 +301,15 @@ namespace Testbed.Abstractions
                         var tangent = MathUtils.Cross(point.Normal, 1.0f);
                         var p1 = point.Position;
                         var p2 = p1 + ImpulseScale * point.TangentImpulse * tangent;
-                        Drawer.DrawSegment(p1, p2, Color.FromArgb(230, 230, 77));
+                        Drawer.DrawSegment(p1, p2, Color.FromArgb(230, 230, 77), ctx);
                     }
                 }
             }
 
             if (BombSpawning)
             {
-                Drawer.DrawPoint(BombSpawnPoint, 4.0f, Color.Blue);
-                Drawer.DrawSegment(MouseWorld, BombSpawnPoint, Color.FromArgb(203, 203, 203));
+                Drawer.DrawPoint(BombSpawnPoint, 4.0f, Color.Blue, ctx);
+                Drawer.DrawSegment(MouseWorld, BombSpawnPoint, Color.FromArgb(203, 203, 203), ctx);
             }
         }
 

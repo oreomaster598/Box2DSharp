@@ -1,4 +1,5 @@
 ﻿using System;
+
 using Box2DSharp.Collision;
 using Box2DSharp.Common;
 using ImGuiNET;
@@ -87,23 +88,33 @@ namespace Testbed.Render
         }
 
         /// <inheritdoc />
-        public void DrawPolygon(Span<Vector2> vertices, int vertexCount, in Color color)
-        {
-            var p1 = vertices[vertexCount - 1];
-            for (var i = 0; i < vertexCount; ++i)
-            {
+        public void DrawPolygon(Span<Vector2> vertices, int vertexCount, in Color color, DebugDrawContext context)
+		{
+            Color4 c = color.ToColor4();
+
+
+			var p1 = vertices[vertexCount - 1];
+			for (var i = 0; i < vertexCount; ++i)
+			{
                 var p2 = vertices[i];
-                _lines.Vertex(p1, color.ToColor4());
-                _lines.Vertex(p2, color.ToColor4());
+                _lines.Vertex(p1, c);
+                _lines.Vertex(p2, c);
                 p1 = p2;
             }
         }
 
         /// <inheritdoc />
-        public void DrawSolidPolygon(Span<Vector2> vertices, int vertexCount, in Color color)
+        public void DrawSolidPolygon(Span<Vector2> vertices, int vertexCount, in Color color, DebugDrawContext context)
         {
-            var color4 = color.ToColor4();
-            var fillColor = new Color4(color4.R * 0.5f, color4.G * 0.5f, color4.B * 0.5f, color4.A * 0.5f);
+
+			var color4 = color.ToColor4();
+			var fillColor = new Color4(color4.R * 0.5f, color4.G * 0.5f, color4.B * 0.5f, color4.A * 0.5f);
+
+			if (context.bodyIndex != -1 && context.body != null)
+            {
+
+                fillColor = new Color4((float)context.bodyIndex / (float)context.body.World.BodyList.Count, 0, 0, 1); ;
+			}
 
             for (var i = 1; i < vertexCount - 1; ++i)
             {
@@ -111,7 +122,7 @@ namespace Testbed.Render
                 _triangles.Vertex(vertices[i], fillColor);
                 _triangles.Vertex(vertices[i + 1], fillColor);
             }
-
+            /*
             var p1 = vertices[vertexCount - 1];
             for (var i = 0; i < vertexCount; ++i)
             {
@@ -119,11 +130,11 @@ namespace Testbed.Render
                 _lines.Vertex(p1, color4);
                 _lines.Vertex(p2, color4);
                 p1 = p2;
-            }
+            }*/
         }
 
         /// <inheritdoc />
-        public void DrawCircle(in Vector2 center, float radius, in Color color)
+        public void DrawCircle(in Vector2 center, float radius, in Color color, DebugDrawContext context)
         {
             var color4 = color.ToColor4();
             const float Segments = 16.0f;
@@ -149,10 +160,15 @@ namespace Testbed.Render
         }
 
         /// <inheritdoc />
-        public void DrawSolidCircle(in Vector2 center, float radius, in Vector2 axis, in Color color)
+        public void DrawSolidCircle(in Vector2 center, float radius, in Vector2 axis, in Color color, DebugDrawContext context)
         {
             var color4 = color.ToColor4();
-            const float Segments = 16.0f;
+			if (context.bodyIndex != -1 && context.body != null)
+			{
+
+				color4 = new Color4((float)context.bodyIndex / (float)context.body.World.BodyList.Count, 0, 0, 1); ;
+			}
+			const float Segments = 16.0f;
             const float Increment = 2.0f * Settings.Pi / Segments;
             var sinInc = (float)Math.Sin(Increment);
             var cosInc = (float)Math.Cos(Increment);
@@ -199,7 +215,7 @@ namespace Testbed.Render
         }
 
         /// <inheritdoc />
-        public void DrawSegment(in Vector2 p1, in Vector2 p2, in Color color)
+        public void DrawSegment(in Vector2 p1, in Vector2 p2, in Color color, DebugDrawContext context)
         {
             var color4 = color.ToColor4();
             _lines.Vertex(p1, color4);
@@ -207,7 +223,7 @@ namespace Testbed.Render
         }
 
         /// <inheritdoc />
-        public void DrawTransform(in Transform xf)
+        public void DrawTransform(in Transform xf, DebugDrawContext context)
         {
             const float AxisScale = 0.4f;
 
@@ -222,7 +238,7 @@ namespace Testbed.Render
         }
 
         /// <inheritdoc />
-        public void DrawPoint(in Vector2 p, float size, in Color color)
+        public void DrawPoint(in Vector2 p, float size, in Color color, DebugDrawContext context)
         {
             _points.Vertex(p, color.ToColor4(), size);
         }
@@ -247,5 +263,18 @@ namespace Testbed.Render
             _lines.Vertex(p4, color4);
             _lines.Vertex(p1, color4);
         }
-    }
+
+		public Color[] GetColors()
+		{
+            return new Color[] 
+            { 
+                Color.FromArgb(128, 128, 77),
+                Color.FromArgb(127, 230, 127),
+                Color.FromArgb(127, 127, 230),
+                Color.FromArgb(153, 153, 153),
+			    Color.FromArgb(230, 179, 179)
+			};
+
+		}
+	}
 }

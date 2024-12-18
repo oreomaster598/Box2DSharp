@@ -168,8 +168,9 @@ namespace Testbed.TestCases
         }
 
         protected override void OnRender()
-        {
-            DrawString("Press 1-5 to drop stuff");
+		{
+			DebugDrawContext ctx = new DebugDrawContext(DrawFlag.DrawShape);
+			DrawString("Press 1-5 to drop stuff");
 
             var advanceRay = TestSettings.Pause == false || TestSettings.SingleStep;
 
@@ -185,14 +186,14 @@ namespace Testbed.TestCases
 
             if (callback.Fixture != null)
             {
-                Drawer.DrawPoint(callback.Point, 5.0f, Color.FromArgb(102, 230, 102));
-                Drawer.DrawSegment(point1, callback.Point, Color.FromArgb(204, 204, 204));
+                Drawer.DrawPoint(callback.Point, 5.0f, Color.FromArgb(102, 230, 102), ctx);
+                Drawer.DrawSegment(point1, callback.Point, Color.FromArgb(204, 204, 204),ctx);
                 var head = callback.Point + 0.5f * callback.Normal;
-                Drawer.DrawSegment(callback.Point, head, Color.FromArgb(230, 230, 102));
+                Drawer.DrawSegment(callback.Point, head, Color.FromArgb(230, 230, 102), ctx);
             }
             else
             {
-                Drawer.DrawSegment(point1, point2, Color.FromArgb(204, 204, 204));
+                Drawer.DrawSegment(point1, point2, Color.FromArgb(204, 204, 204), ctx);
             }
 
             if (advanceRay)

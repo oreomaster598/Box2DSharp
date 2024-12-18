@@ -109,7 +109,8 @@ namespace Testbed.TestCases
 
         protected override void OnRender()
         {
-            DrawString("Keys: a: automate, c: create, d: destroy, m: move");
+			DebugDrawContext ctx = new DebugDrawContext(DrawFlag.DrawShape);
+			DrawString("Keys: a: automate, c: create, d: destroy, m: move");
             DrawString("Blue: overlap");
             DrawString("Green: ray actor");
             DrawString("Red: ray actor & overlap");
@@ -142,18 +143,18 @@ namespace Testbed.TestCases
             c = Color.FromArgb(0.7f, 0.7f, 0.7f);
             Drawer.DrawAABB(_queryAABB, c);
 
-            Drawer.DrawSegment(_rayCastInput.P1, _rayCastInput.P2, c);
+            Drawer.DrawSegment(_rayCastInput.P1, _rayCastInput.P2, c, ctx);
 
             var c1 = Color.FromArgb(0.2f, 0.9f, 0.2f);
             var c2 = Color.FromArgb(0.9f, 0.2f, 0.2f);
-            Drawer.DrawPoint(_rayCastInput.P1, 6.0f, c1);
-            Drawer.DrawPoint(_rayCastInput.P2, 6.0f, c2);
+            Drawer.DrawPoint(_rayCastInput.P1, 6.0f, c1, ctx);
+            Drawer.DrawPoint(_rayCastInput.P2, 6.0f, c2, ctx);
 
             if (_rayActor != null)
             {
                 var cr = Color.FromArgb(0.2f, 0.2f, 0.9f);
                 var p = _rayCastInput.P1 + _rayActor.Fraction * (_rayCastInput.P2 - _rayCastInput.P1);
-                Drawer.DrawPoint(p, 6.0f, cr);
+                Drawer.DrawPoint(p, 6.0f, cr, ctx);
             }
 
             {

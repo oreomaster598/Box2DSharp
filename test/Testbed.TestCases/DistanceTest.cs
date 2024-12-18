@@ -81,8 +81,9 @@ namespace Testbed.TestCases
         }
 
         protected override void OnRender()
-        {
-            var input = new DistanceInput();
+		{
+			DebugDrawContext ctx = new DebugDrawContext(DrawFlag.DrawShape);
+			var input = new DistanceInput();
             input.ProxyA.Set(_polygonA, 0);
             input.ProxyB.Set(_polygonB, 0);
             input.TransformA = _transformA;
@@ -102,24 +103,24 @@ namespace Testbed.TestCases
                     v[i] = MathUtils.Mul(_transformA, _polygonA.Vertices[i]);
                 }
 
-                Drawer.DrawPolygon(v, _polygonA.Count, color);
+                Drawer.DrawPolygon(v, _polygonA.Count, color,ctx);
 
                 for (var i = 0; i < _polygonB.Count; ++i)
                 {
                     v[i] = MathUtils.Mul(_transformB, _polygonB.Vertices[i]);
                 }
 
-                Drawer.DrawPolygon(v, _polygonB.Count, color);
+                Drawer.DrawPolygon(v, _polygonB.Count, color, ctx);
             }
 
             var x1 = output.PointA;
             var x2 = output.PointB;
 
             var c1 = Color.FromArgb(255, 0, 0);
-            Drawer.DrawPoint(x1, 4.0f, c1);
+            Drawer.DrawPoint(x1, 4.0f, c1, ctx);
 
             var c2 = Color.FromArgb(255, 255, 0);
-            Drawer.DrawPoint(x2, 4.0f, c2);
+            Drawer.DrawPoint(x2, 4.0f, c2, ctx);
         }
     }
 }

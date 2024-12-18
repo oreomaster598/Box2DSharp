@@ -28,8 +28,9 @@ namespace Testbed.TestCases
         }
 
         protected override void OnRender()
-        {
-            var sweepA = new Sweep();
+		{
+			DebugDrawContext ctx = new DebugDrawContext(DrawFlag.DrawShape);
+			var sweepA = new Sweep();
             sweepA.C0.Set(24.0f, -60.0f);
             sweepA.A0 = 2.95f;
             sweepA.C = sweepA.C0;
@@ -68,7 +69,7 @@ namespace Testbed.TestCases
                 vertices[i] = MathUtils.Mul(transformA, _shapeA.Vertices[i]);
             }
 
-            Drawer.DrawPolygon(vertices, _shapeA.Count, Color.FromArgb(230, 230, 230));
+            Drawer.DrawPolygon(vertices, _shapeA.Count, Color.FromArgb(230, 230, 230), ctx);
 
             sweepB.GetTransform(out var transformB, 0.0f);
 
@@ -79,7 +80,7 @@ namespace Testbed.TestCases
                 vertices[i] = MathUtils.Mul(transformB, _shapeB.Vertices[i]);
             }
 
-            Drawer.DrawPolygon(vertices, _shapeB.Count, Color.FromArgb(127, 230, 127));
+            Drawer.DrawPolygon(vertices, _shapeB.Count, Color.FromArgb(127, 230, 127), ctx);
 
             sweepB.GetTransform(out transformB, output.Time);
 
@@ -88,7 +89,7 @@ namespace Testbed.TestCases
                 vertices[i] = MathUtils.Mul(transformB, _shapeB.Vertices[i]);
             }
 
-            Drawer.DrawPolygon(vertices, _shapeB.Count, Color.FromArgb(127, 178, 230));
+            Drawer.DrawPolygon(vertices, _shapeB.Count, Color.FromArgb(127, 178, 230), ctx);
 
             sweepB.GetTransform(out transformB, 1.0f);
 
@@ -97,7 +98,7 @@ namespace Testbed.TestCases
                 vertices[i] = MathUtils.Mul(transformB, _shapeB.Vertices[i]);
             }
 
-            Drawer.DrawPolygon(vertices, _shapeB.Count, Color.FromArgb(230, 127, 127));
+            Drawer.DrawPolygon(vertices, _shapeB.Count, Color.FromArgb(230, 127, 127), ctx);
         }
     }
 }
