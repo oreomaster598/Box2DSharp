@@ -206,12 +206,27 @@ namespace Box2DSharp.Collision.Shapes
             Centroid.SetZero();
         }
 
-        /// Build vertices to represent an oriented box.
-        /// @param hx the half-width.
-        /// @param hy the half-height.
-        /// @param center the center of the box in local coordinates.
-        /// @param angle the rotation of the box in local coordinates.
-        public void SetAsBox(float hx, float hy, in Vector2 center, float angle)
+		/// Build vertices to represent an axis-aligned box centered on the local origin.
+		public void SetAsBox(Vector2 min, Vector2 max)
+		{
+			Count = 4;
+			Vertices[0].Set(min.X, min.Y);
+			Vertices[1].Set(max.X, min.Y);
+			Vertices[2].Set(max.X, max.Y);
+			Vertices[3].Set(min.X, max.Y);
+			Normals[0].Set(0.0f, -1.0f);
+			Normals[1].Set(1.0f, 0.0f);
+			Normals[2].Set(0.0f, 1.0f);
+			Normals[3].Set(-1.0f, 0.0f);
+			Centroid.SetZero();
+		}
+
+		/// Build vertices to represent an oriented box.
+		/// @param hx the half-width.
+		/// @param hy the half-height.
+		/// @param center the center of the box in local coordinates.
+		/// @param angle the rotation of the box in local coordinates.
+		public void SetAsBox(float hx, float hy, in Vector2 center, float angle)
         {
             SetAsBox(hx, hy);
             Centroid = center;
